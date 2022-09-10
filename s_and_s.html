@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width">
+<style>
+  body {
+    max-width: 1100px;
+    margin: 0px auto;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  }
+
+  h1 {
+    margin-top: 80px;
+    margin-bottom: 50px;
+    text-align: center;
+  }
+
+  svg {
+    background-color: rgb(255, 255, 255);
+  }
+
+  #container {
+    position: relative;
+  }
+
+  #sections {
+    width: 400px;
+  }
+
+  #sections>div {
+    opacity: .2;
+    margin-bottom: 200px;
+    height: 200px;
+  }
+
+  #sections>div:last-child {
+    margin-bottom: 30px;
+  }
+
+  #sections>div.graph-scroll-active {
+    opacity: 1;
+  }
+
+  #graph {
+    margin-left: 40px;
+    width: 650px;
+    position: -webkit-sticky;
+    position: sticky;
+    top: 0px;
+    float: right;
+  }
+
+  #map {
+    height: 600px;
+    margin-left: 40px;
+    width: 650px;
+    top: 0px;
+    float: right;
+  }
+
+  #map svg {
+    background-color: rgba(255, 255, 255, 0);
+  }
+
+  @keyframes scroll_2 {
+    0% {
+      transform: translateY(0);
+      opacity: 1;
+    }
+
+    25% {
+      opacity: 1;
+    }
+
+    75% {
+      transform: translateY(1.5em);
+      opacity: 0;
+    }
+
+    100% {
+      transform: translateY(0);
+      opacity: 0;
+    }
+  }
+
+  @media (max-width: 1125px) {
+    #graph {
+      width: 100%;
+      margin-left: 0px;
+      float: none;
+    }
+
+    #sections {
+      width: auto;
+      position: relative;
+      margin: 0px auto;
+    }
+
+    #sections>div {
+      background: rgba(255, 255, 255, 0.5);
+      padding: 10px;
+      border-top: 1px solid;
+      border-bottom: 1px solid;
+      margin-bottom: 80vh;
+    }
+
+    pre {
+      overflow: hidden;
+    }
+
+    h1 {
+      margin: 10px;
+    }
+  }
+
+  .scroll-icon__dot {
+    display: block;
+    position: absolute;
+    left: 50%;
+    background: rgb(97, 97, 97);
+    height: .75em;
+    width: .75em;
+    top: 1.5em;
+    margin-left: -0.375em;
+    border-radius: 50%;
+    transform-origin: top center;
+    backface-visibility: hidden;
+    animation: scroll_2 2s ease-out infinite;
+  }
+
+  .scroll-icon {
+    display: block;
+    position: relative;
+    height: 5em;
+    width: 3em;
+    border: .25em solid rgb(156, 156, 156);
+    border-radius: 1em;
+  }
+
+  .page-wrap {
+    display: flex;
+    height: 100vh;
+  }
+
+  .example {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin-top: 50px;
+  }
+
+  .mono {
+    font-family: monospace;
+  }
+
+  .text_no_graph {
+    text-align: left;
+    margin-bottom: 50px;
+  }
+
+  .info {
+    padding: 6px 8px;
+    font: 14px/16px Arial, Helvetica, sans-serif;
+    background: white;
+    background: rgba(255, 255, 255, 0.8);
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+    border-radius: 5px;
+    text-align: right;
+  }
+
+  .info h4 {
+    margin: 0 0 5px;
+  }
+
+  .legend {
+    line-height: 18px;
+    color: #555;
+  }
+
+  .legend i {
+    width: 18px;
+    height: 18px;
+    float: left;
+    margin-right: 0px;
+    opacity: 0.9;
+  }
+
+  .axis {
+    font: 14px sans-serif;
+  }
+</style>
+
+<h1>The Effectiveness and Fairness of Stop and Search as a Method of Crime Reduction</h1>
+<div class='text_no_graph'>
+  <p>
+    'Stop and search' refers to the police's power to stop people either on foot or in a
+    vehicle, search their outer clothing and luggage and gather basic personal information.
+    There are two types of stop and search, suspicion-based (known as section 1) and suspicion-less (known as section
+    60).
+    The former makes up the vast majority of stop and searches and forms the popular perception of 'stop and search'.
+  </p>
+  <p>
+    Proponents of stop and search claim it reduces crime by both finding articles of crime, mainly drugs and weapons,
+    but also by acting as a deterrent to potential criminals. They also say the associated police presence reassures the
+    public and makes them feel safer. Opponents of the policy claim it has little effect on crime and unfairly targets
+    ethnic minority and socioeconomically disadvantaged groups, compromising public trust in the police.
+  </p>
+  <p>
+    This story aims to assess whether stop and search is effective in reducing violent and drug-related crime.
+    It will also consider how different groups are targeted by stop and search and what impact it has on their
+    relationship with the police.
+  </p>
+</div>
+
+<div id='container' class='container-1'>
+  <div id='graph'></div>
+  <div id='sections'>
+    <div>
+      <h3>Historic Trends in Stop and Search</h3>
+      <p> The total number of stop and searches (referred to here as 'stops') in England and Wales increased
+        consistently throughout the 2000s.
+        Its usage then began to decline at the turn of the decade, many thought irreversibly.
+      </p>
+      <p>
+        However, the number of stops has increased in recent years, leading to renewed discussion about their
+        effectiveness.
+      </p>
+
+      <section class="example">
+        <span class="scroll-icon">
+          <span class="scroll-icon__dot"></span>
+        </span>
+      </section>
+    </div>
+
+    <div>
+      <h3>Operation Blunt 2</h3>
+      <p>
+        In the spring of 2008, with nationwide stops at an all-time high, the Metropolitan police launched operation
+        Blunt 2.
+        The new mayor of London, Boris Johnson, called it a <em>"sustained, visible, long-term operation".</em>
+      </p>
+      <p>
+        There was a sharp increase in the number of stops, as many as a threefold increase in some boroughs.
+        This period can therefore be used to assess the impact on crime both during and after the operation.
+      </p>
+    </div>
+
+    <div>
+      <h3>Effect on Violent Crime</h3>
+      <p>
+        Whilst there was a decrease in possession of offensive weapons during the operation, this trend was already in
+        motion beforehand and continued afterwards.
+        It therefore appears that the operation had little impact in this regard.
+      </p>
+    </div>
+
+    <div>
+      <p>
+        There was also little change to the amount of violent crime occuring in the city.
+        The decreasing trend of robberies and violent assaults was largely undisturbed...
+      </p>
+    </div>
+
+    <div>
+      <p>
+        ...and there was little impact on the amount of murders and manslaughters.
+      </p>
+    </div>
+
+    <div>
+      <h3>Effect on Drug-related crime</h3>
+      <p>
+        Counter-intuitively, the operation saw a sustained trend reversal in the number of arrests for possession of
+        drugs. It
+        is
+        difficult to tell whether this was because
+        the stops were ineffective compared to previously used measures or because they acted as a detterent.
+      </p>
+    </div>
+
+    <div>
+      <p>
+        It is telling that even while arrests for drug possession were decreasing, arrests for drug trafficking offences
+        stayed largely constant. This indicates that the wider market for drugs was likely undisturbed by increased stop
+        and search measures.
+      </p>
+    </div>
+
+    <div> </div>
+
+  </div>
+
+</div>
+
+<div class='text_no_graph'>
+  <p>
+    In the time since operation Blunt 2 concluded, Boris Johnson has ascended the ranks of British politics to become
+    prime minister.
+    In a 2018 ITV interview he said of the operation: <em>"We took tens of thousands of knives off the streets. It was
+      controversial, people said it was unfair, but, by God, it worked.”</em>
+    Despite these claims, the home office's own report into the effectiveness of operation Blunt 2 concluded that
+    <em>"Overall, analysis shows that there was no discernible crime-reducing effects from a
+      large surge in stop and search activity at the borough level during the operation"</em> [5].
+    Furthermore, Johnson's repeated claim that 11,000 knives were taken off the streets using stop and search has been
+    questioned by fact-checkers, with the true number thought to be less than half that [4].
+  </p>
+  <p>
+    The 'unfairness' of stop and search the prime minister was alluding to in 2018 is the focus of the next section.
+    Many people claim that stop and search measures disproportionately target members of certain ethnic minority groups,
+    especially black people. Police efforts also tend to be focussed in areas of higher deprivation, and many claim this
+    fuels a downward spiral of poor community-police relations.
+  </p>
+</div>
+
+<div id='container' class='container-2'>
+  <div id='graph'></div>
+  <div id='sections'>
+    <div>
+      <h3>Disproportionality in Stop and Search by Ethnicity</h3>
+      <p> At first glance, it appears white people are by far those most frequently stopped by police.</p>
+    </div>
+
+    <div style=height:600px;>
+      <p>
+        However, once poplulation is adjusted for, it is clear that black people make up roughly half of all those
+        stopped, with white people being targeted the least.
+      </p>
+      <p>
+        Depending on the exact figures used, research consistently shows that black people are at least 4 times more
+        likely to be stopped by police in London, despite the fact that searches of black people are <em>less</em>
+        likely to detect crime [2]. For young black males, the numbers are even more shocking. Research from
+        University College London has shown that they were stopped 19 times as often as the wider population in
+        the third quarter of 2020 [1].
+      </p>
+    </div>
+
+  </div>
+
+</div>
+
+<div id='container' class='container-3'>
+  <div id='map'></div>
+  <div id='sections'>
+    <div>
+      <h3> Geographical Disproportionality in Stop and Search </h3>
+      <p>
+        Data on the location of every stop and search from 2020 can be combined with index of multiple (IMD) scores to
+        study their relationship. The large coverage of neutral colours (white, grey, black) on the
+        map indicates that in most boroughs, the number of stops closely relates to the level of deprivation. In the
+        third quarter of this period, stops for weapons in the most deprived half of neighbourhoods accounted for 80% of
+        all stops [1].
+      </p>
+      <p>
+        Take some time exploring the map, bearing in mind that the average number of stops per 1000 people is 24.6, and
+        the average IMD score is 21.3. Consider why some boroughs, especially in south-central London, might be
+        bordering boroughs with a vastly different relationship between stops and deprivation.
+      </p>
+    </div>
+
+    <div> </div>
+
+  </div>
+</div>
+
+<div id='container' class='container-4'>
+  <div id='graph'></div>
+  <div id='sections'>
+    <div>
+      <h3>Public Opinion of Stop and Search</h3>
+      <p>
+        A survey by the Indepedent Office for Police Conduct (IOPC) aimed to assess public opinion of the police on a
+        variety of matters, including stop and search [6]. Although the majority of people view stop and search as a
+        necessary procedure, less than half think it is being applied correctly.
+      </p>
+    </div>
+
+    <div>
+      <p>
+        Of those people who think it is not applied correctly, the most common reason is that not all groups of people
+        are treated the equally.
+        Although the study does not specify which groups this refers to, it is worth investigating the opinions of
+        people
+        belonging to different ethnic groups,
+        given the previously described disproportionality that exists between them.
+      </p>
+    </div>
+
+    <div>
+      <p>
+        There is a clear distinction between how white people and members of ethnic minority groups feel about stop and
+        search.
+        White people are about 1.5 times more likely to approve of stop and search as it is currently used.
+      </p>
+    </div>
+
+    <div> </div>
+
+  </div>
+</div>
+
+<div id='container' class='container-5'>
+  <div id='graph'></div>
+  <div id='sections'>
+    <div>
+      <h3> Attitudes of Ethnic Minority Groups Towards the Police </h3>
+      <p>
+        The disparities regarding opinions on stop and search are reflected in people's opinions of the police more
+        generally.
+        Close to a quarter (23%) of BAME respondents don't think the police respond in a fair and proportionate way -
+        this percentage is higher than that of the general public (17%).
+      </p>
+    </div>
+
+    <div>
+      <p>
+        A different survey, specifically on the human rights of the black community found that the vast majority (85%)
+        are not confident that they would be treated the same as a white person by the police [3].
+      </p>
+    </div>
+
+    <div>
+      <h3>Personal accounts of interactions with the police.</h3>
+      <p>
+        The causes and indicators of crime are complex, and it is difficult to draw conclusions about whether stop and
+        search does more harm than good.
+        However, reading these accounts may give you a different perspective on those who are distrusting of police.
+        Perhaps you've had interactions with the police before. How do you think a negative experience like this would
+        impact your own opinion of the police?
+      </p>
+    </div>
+
+    <div> </div>
+
+  </div>
+</div>
+
+<div>
+  <p>
+    <b>A Note on Terminology:</b> Descriptors of broad ethnic groups are taken from the corresponding data sources for
+    integrity, they may therefore not be used consistently throughout. It should also be noted that some of these terms,
+    most notably 'BAME' are no longer in common use.
+  </p>
+</div>
+
+<h2> References </h2>
+<div class="csl-bib-body" style="line-height: 1.35;">
+  <div class="csl-entry" style="clear: left; ">
+    <div class="csl-left-margin" style="float: left; padding-right: 0.5em;text-align: right; width: 2em;">[1]</div>
+    <div class="csl-right-inline" style="margin: 0 .4em 0 2.5em;">M. Ashby, 'Stop and search in London, July to
+      September 2020', Institute For Global City Policing, Nov. 2020. [Online]. Available: <a
+        href="https://discovery.ucl.ac.uk/id/eprint/10115766/1/2020-Q3.pdf">https://discovery.ucl.ac.uk/id/eprint/10115766/1/2020-Q3.pdf</a>
+    </div>
+  </div>
+  <div class="csl-entry" style="clear: left; ">
+    <div class="csl-left-margin" style="float: left; padding-right: 0.5em;text-align: right; width: 2em;">[2]</div>
+    <div class="csl-right-inline" style="margin: 0 .4em 0 2.5em;">V. Dodd, V. D. Police, and crime correspondent, 'Met
+      police “disproportionately” use stop and search powers on black people', <i>The Guardian</i>, Jan. 26, 2019.
+      Accessed: Jan. 03, 2022. [Online]. Available: <a
+        href="https://www.theguardian.com/law/2019/jan/26/met-police-disproportionately-use-stop-and-search-powers-on-black-people">https://www.theguardian.com/law/2019/jan/26/met-police-disproportionately-use-stop-and-search-powers-on-black-people</a>
+    </div>
+  </div>
+  <div class="csl-entry" style="clear: left; ">
+    <div class="csl-left-margin" style="float: left; padding-right: 0.5em;text-align: right; width: 2em;">[3]</div>
+    <div class="csl-right-inline" style="margin: 0 .4em 0 1.5em;">C. Henry, K. Imafidon, and N. McGarry, 'The Black
+      Community and Human Rights', CVR Insights, Survey, Sep. 2020. [Online]. Available: <a
+        href="https://publications.parliament.uk/pa/jt5801/jtselect/jtrights/correspondence/The-Black-Community-Human-Rights-Report.pdf">https://publications.parliament.uk/pa/jt5801/jtselect/jtrights/correspondence/The-Black-Community-Human-Rights-Report.pdf</a>
+    </div>
+  </div>
+  <div class="csl-entry" style="clear: left; ">
+    <div class="csl-left-margin" style="float: left; padding-right: 0.5em;text-align: right; width: 2em;">[4]</div>
+    <div class="csl-right-inline" style="margin: 0 .4em 0 2.5em;">G. Lee, 'FactCheck: Boris Johnson's stop and search
+      knife claim', <i>Channel 4 News</i>, Aug. 20, 2019. <a
+        href="https://www.channel4.com/news/factcheck/factcheck-boris-johnsons-stop-and-search-knife-claim">https://www.channel4.com/news/factcheck/factcheck-boris-johnsons-stop-and-search-knife-claim</a>
+      (accessed Jan. 10, 2022).</div>
+  </div>
+  <div class="csl-entry" style="clear: left; ">
+    <div class="csl-left-margin" style="float: left; padding-right: 0.5em;text-align: right; width: 2em;">[5]</div>
+    <div class="csl-right-inline" style="margin: 0 .4em 0 2.5em;">R. McCandless, A. Feist, J. Allan, and N. Morgan, 'Do
+      initiatives involving substantial increases in stop and search reduce crime? Assessing the impact of Operation
+      BLUNT 2', p. 52.</div>
+  </div>
+  <div class="csl-entry" style="clear: left; ">
+    <div class="csl-left-margin" style="float: left; padding-right: 0.5em;text-align: right; width: 2em;">[6]</div>
+    <div class="csl-right-inline" style="margin: 0 .4em 0 1.5em;">Yonder, 'IOPC Public Perceptions Tracker - “Stop and
+      Search” Summary'. [Online]. Available: <a
+        href="https://www.policeconduct.gov.uk/sites/default/files/Documents/research-learning/IOPC_Yonder_Stop_And_Search_Presentation_2021.pptx">https://www.policeconduct.gov.uk/sites/default/files/Documents/research-learning/IOPC_Yonder_Stop_And_Search_Presentation_2021.pptx</a>
+    </div>
+  </div>
+
+</div>
+
+<h1> </h1>
+
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
+  integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="
+  crossorigin="" />
+<script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"
+  integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="
+  crossorigin=""></script>
+<script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk="
+  crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet-ajax/2.1.0/leaflet.ajax.min.js"></script>
+<script src="data/london_boroughs.js"></script>
+<script src="graph_scroll/d3v4+jetpack.js"></script>
+<script src="graph_scroll/graph-scroll.js"></script>
+<script src="visualisations.js"></script>
+<script src="map.js"></script>
